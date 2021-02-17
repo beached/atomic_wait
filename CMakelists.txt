@@ -39,3 +39,4 @@ set(libatomic_wait_INSTALL_CMAKEDIR "share/LibAtomicWait/cmake"
 
 install(EXPORT LibAtomicWaitConfig DESTINATION ${libatomic_wait_INSTALL_CMAKEDIR})
 export(TARGETS atomic_wait FILE LibAtomicWaitConfig.cmake)
+
