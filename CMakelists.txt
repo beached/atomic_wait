@@ -1,0 +1,41 @@
+cmake_minimum_required(VERSION 3.16)
+project(atomic_wait
+        VERSION "0.0.1"
+        DESCRIPTION "Sample implementation of C++20 atomic_wait/notify, forked from https://github.com/ogiroux/atomic_wait"
+        HOMEPAGE_URL "https://github.com/beached/atomic_wait"
+        LANGUAGES C CXX
+        )
+
+set(CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested.")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+set(SOURCE_FILES
+        lib/source.cpp
+        )
+
+include(GNUInstallDirs)
+
+option(BUILD_SHARED_LIBS "Build shared library" ON)
+add_library(atomic_wait ${SOURCE_FILES} )
+add_library( ${PROJECT_NAME}::atomic_wait ALIAS atomic_wait )
+
+target_compile_definitions(atomic_wait PRIVATE PACKAGE_VERSION="${PROJECT_VERSION}" HAVE_XLOCALE_H=1)
+
+target_include_directories( atomic_wait PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+        PRIVATE src)
+
+set_target_properties(atomic_wait PROPERTIES
+        VERSION ${PROJECT_VERSION}
+        SOVERSION 1)
+
+install(TARGETS atomic_wait  EXPORT LibAtomicWaitConfig)
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+set(libatomic_wait_INSTALL_CMAKEDIR "share/LibAtomicWait/cmake"
+    CACHE STRING "Install location for generated CMake files.")
+
+install(EXPORT LibAtomicWaitConfig DESTINATION ${libatomic_wait_INSTALL_CMAKEDIR})
+export(TARGETS atomic_wait FILE LibAtomicWaitConfig.cmake)
