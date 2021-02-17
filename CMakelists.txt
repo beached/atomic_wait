@@ -14,6 +14,14 @@ set(SOURCE_FILES
         lib/source.cpp
         )
 
+# ---- Warning guard ----
+
+# Protect dependents from this project's warnings if the guard isn't disabled
+set(AtomicWait_warning_guard SYSTEM)
+if(AtomicWait_INCLUDE_WITHOUT_SYSTEM)
+  set(AtomicWait_warning_guard "")
+endif()
+
 include(GNUInstallDirs)
 
 option(BUILD_SHARED_LIBS "Build shared library" ON)
@@ -22,7 +30,7 @@ add_library( ${PROJECT_NAME}::atomic_wait ALIAS atomic_wait )
 
 target_compile_definitions(atomic_wait PRIVATE PACKAGE_VERSION="${PROJECT_VERSION}" HAVE_XLOCALE_H=1)
 
-target_include_directories( atomic_wait PUBLIC
+target_include_directories( atomic_wait ${AtomicWait_warning_guard} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
         PRIVATE src)
