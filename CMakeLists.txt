@@ -41,7 +41,7 @@ add_library( daw::${PROJECT_NAME} ALIAS ${PROJECT_NAME} )
 
 generate_export_header(
     ${PROJECT_NAME}
-    EXPORT_FILE_NAME "include/${PROJECT_NAME}_export.h"
+    EXPORT_FILE_NAME "include/cpp20/${PROJECT_NAME}_export.h"
 )
 
 set_target_properties(
@@ -55,8 +55,8 @@ set_target_properties(
 
 target_include_directories( ${PROJECT_NAME} ${Synchronization_warning_guard}
     PUBLIC
-        $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+				$<INSTALL_INTERFACE:include>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/lib
 )
