@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "atomic_wait"
 
-namespace std {
+namespace daw {
 
 	class latch {
 	public:
@@ -67,4 +67,4 @@ namespace std {
 		std::atomic<ptrdiff_t> counter;
 	};
 
-} // namespace std
+} // namespace daw

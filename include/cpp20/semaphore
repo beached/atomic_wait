@@ -163,7 +163,7 @@ __semaphore_sem_wait_timed( __semaphore_sem_t &sem,
 
 #endif
 
-namespace std {
+namespace daw {
 
 	class __atomic_semaphore_base {
 
@@ -555,4 +555,4 @@ namespace std {
 
 	using binary_semaphore = counting_semaphore<1>;
 
-} // namespace std
+} // namespace daw
