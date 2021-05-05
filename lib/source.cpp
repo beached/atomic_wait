@@ -22,19 +22,19 @@ THE SOFTWARE.
 
 */
 
-#include <atomic_wait>
-#include <barrier>
+#include <cpp20/atomic_wait>
+#include <cpp20/barrier>
 #include <thread>
 
 #ifdef __TABLE
 
 contended_t contention[256];
 
-contended_t * __contention(volatile void const * p) {
-    return contention + ((uintptr_t)p & 255);
+contended_t *__contention( volatile void const *p ) {
+	return contention + ( (uintptr_t)p & 255 );
 }
 
 #endif //__TABLE
 
 thread_local size_t __barrier_favorite_hash =
-    std::hash<std::thread::id>()(std::this_thread::get_id());
+  std::hash<std::thread::id>( )( std::this_thread::get_id( ) );

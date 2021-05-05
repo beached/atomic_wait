@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(synchronization
+project("synchro"
         VERSION "0.0.1"
         DESCRIPTION "Sample implementation of C++20 atomic_wait/notify, forked from https://github.com/ogiroux/atomic_wait"
         HOMEPAGE_URL "https://github.com/beached/atomic_wait"
@@ -28,16 +28,16 @@ set(SOURCE_FILES
 )
 
 set(HEADER_FILES 
-        include/atomic_wait
-        include/barrier
-        include/latch
-        include/semaphore
+        include/cpp20/atomic_wait
+        include/cpp20/barrier
+        include/cpp20/latch
+        include/cpp20/semaphore
 )
 
 include(GenerateExportHeader)
 
 add_library(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
-add_library( ${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME} )
+add_library( daw::${PROJECT_NAME} ALIAS ${PROJECT_NAME} )
 
 generate_export_header(
     ${PROJECT_NAME}
@@ -118,3 +118,10 @@ install(
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   include(CPack)
 endif()
+
+option(DAW_ENABLE_TESTING "Build unit tests" OFF)
+if (DAW_ENABLE_TESTING)
+    enable_testing()
+    add_subdirectory(tests)
+endif ()
+

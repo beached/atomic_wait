@@ -22,58 +22,58 @@ THE SOFTWARE.
 
 */
 
-#include <chrono>
 #include <atomic>
-#include <atomic_wait>
-#include <semaphore>
-#include <latch>
-#include <barrier>
+#include <chrono>
+#include <cpp20/atomic_wait>
+#include <cpp20/barrier>
+#include <cpp20/latch>
+#include <cpp20/semaphore>
 
 struct mutex {
-	void lock() noexcept {
-		while (1 == l.exchange(1, std::memory_order_acquire))
+	void lock( ) noexcept {
+		while( 1 == l.exchange( 1, std::memory_order_acquire ) )
 #ifndef __NO_WAIT
-			atomic_wait_explicit(&l, 1, std::memory_order_relaxed)
+			atomic_wait_explicit( &l, 1, std::memory_order_relaxed )
 #endif
-            ;
+			  ;
 	}
-	void unlock() noexcept {
-		l.store(0, std::memory_order_release);
+	void unlock( ) noexcept {
+		l.store( 0, std::memory_order_release );
 #ifndef __NO_WAIT
-		atomic_notify_one(&l);
+		atomic_notify_one( &l );
 #endif
 	}
-	std::atomic<int> l = ATOMIC_VAR_INIT(0);
+	std::atomic<int> l = ATOMIC_VAR_INIT( 0 );
 };
 
 struct ticket_mutex {
-	void lock() noexcept {
-        auto const my = in.fetch_add(1, std::memory_order_acquire);
-        while(1) {
-            auto const now = out.load(std::memory_order_acquire);
-            if(now == my)
-                return;
+	void lock( ) noexcept {
+		auto const my = in.fetch_add( 1, std::memory_order_acquire );
+		while( 1 ) {
+			auto const now = out.load( std::memory_order_acquire );
+			if( now == my )
+				return;
 #ifndef __NO_WAIT
-            atomic_wait_explicit(&out, now, std::memory_order_relaxed);
+			atomic_wait_explicit( &out, now, std::memory_order_relaxed );
 #endif
-        }
+		}
 	}
-	void unlock() noexcept {
-		out.fetch_add(1, std::memory_order_release);
+	void unlock( ) noexcept {
+		out.fetch_add( 1, std::memory_order_release );
 #ifndef __NO_WAIT
-		atomic_notify_all(&out);
+		atomic_notify_all( &out );
 #endif
 	}
-	alignas(64) std::atomic<int> in = ATOMIC_VAR_INIT(0);
-    alignas(64) std::atomic<int> out = ATOMIC_VAR_INIT(0);
+	alignas( 64 ) std::atomic<int> in = ATOMIC_VAR_INIT( 0 );
+	alignas( 64 ) std::atomic<int> out = ATOMIC_VAR_INIT( 0 );
 };
 
 struct sem_mutex {
-	void lock() noexcept {
-        c.acquire();
+	void lock( ) noexcept {
+		c.acquire( );
 	}
-	void unlock() noexcept {
-        c.release();
+	void unlock( ) noexcept {
+		c.release( );
 	}
 	std::binary_semaphore c = 1;
 };
